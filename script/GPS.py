@@ -9,12 +9,13 @@ portwrite = "/dev/ttyUSB2"
 port = "/dev/ttyUSB1"
 
 def parseGPS(data):
+    print(data, end='') #prints raw data
     if data[0:6] == "$GPRMC":
         sdata = data.split(",")
         if sdata[2] == 'V':
-            print("No satellite data available.")
+            print("\nNo satellite data available.\n")
             return
-        #  -----Parsing GPRMC-----  #
+        print("-----Parsing GPRMC-----")
         time = sdata[1][0:2] + ":" + sdata[1][2:4] + ":" + sdata[1][4:6]
         lat = decode(sdata[3]) #latitude
         dirLat = sdata[4]      #latitude direction N/S
@@ -36,9 +37,8 @@ def parseGPS(data):
 
         print("Longitute: " + str(int(longitute[0]) + (float(longitute[2])/60)) + dirLon)
 
-        #print("time : %s, latitude : %s(%s), longitude : %s(%s), speed : %s, 
-        #True Course : %s, Date : %s, Magnetic Variation : %s(%s),Checksum : %s "%  
-        #(time,lat,dirLat,lon,dirLon,speed,trCourse,date,variation,degree,checksum))    
+        print("time : %s, latitude : %s(%s), longitude : %s(%s), speed : %s,True Course : %s, Date : %s, Magnetic Variation : %s(%s),Checksum : %s "%   (time,lat,dirLat,lon,dirLon,speed,trCourse,date,variation,degree,checksum))
+
   
 def decode(coord):
     #Converts DDDMM.MMMMM -> DD deg MM.MMMMM min
@@ -54,7 +54,7 @@ try:
     serw = serial.Serial(portwrite, baudrate = 115200, timeout = 1,rtscts=True, dsrdtr=True)
     serw.write('AT+QGPS=1\r'.encode())
     serw.close()
-    sleep(0.5)
+    sleep(1)
 except Exception as e: 
     print("Serial port connection failed.")
     print(e)
@@ -64,3 +64,4 @@ ser = serial.Serial(port, baudrate = 115200, timeout = 0.5,rtscts=True, dsrdtr=T
 while True:
    data = ser.readline().decode('utf-8')
    parseGPS(data)
+   sleep(2)
