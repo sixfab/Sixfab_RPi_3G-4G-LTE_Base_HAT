@@ -25,7 +25,7 @@ def parseGPS(data):
         trCourse = sdata[8]    #True course
         date = sdata[9][0:2] + "/" + sdata[9][2:4] + "/" + sdata[9][4:6] #date
         variation = sdata[10]  #variation
-        degreeChecksum = sdata[12]
+        degreeChecksum = sdata[13] #Checksum
         dc = degreeChecksum.split("*")
         degree = dc[0]        #degree
         checksum = dc[1]      #checksum
